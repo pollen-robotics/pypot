@@ -19,7 +19,7 @@ class DxlIO(AbstractDxlIO):
                 pass
             else:
                 break
-    
+
     def get_control_mode(self, ids):
         """ Gets the mode ('joint' or 'wheel') for the specified motors. """
         to_get_ids = [id for id in ids if id not in self._known_mode]

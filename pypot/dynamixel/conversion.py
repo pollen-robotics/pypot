@@ -14,13 +14,14 @@
 
 import numpy
 import itertools
-
+import ctypes
 from enum import Enum
 
 # MARK: - Position
 
 position_range = {
     'MX': (4096, 360.0),
+    # 'MX': (57346, 5040.0),
     'SR': (4096, 360.0),
     'EX': (4096, 251.0),
     '*': (1024, 300.0)
@@ -51,7 +52,7 @@ velocity = {  # in degree/s
     'RX-24': 756.,
     'RX-28': 402.,
     'RX-64': 294.,
-    'SR-RH4D': 300.   
+    'SR-RH4D': 300.
 }
 
 
@@ -79,13 +80,15 @@ def degree_to_dxl(value, model):
     max_pos, max_deg = position_range[determined_model]
 
     pos = int(round((max_pos - 1) * ((max_deg / 2 + float(value)) / max_deg), 0))
-    pos = min(max(pos, 0), max_pos - 1)
+    # pos = min(max(pos, 0), max_pos - 1)
 
-    return pos
+    return ctypes.c_ushort(pos).value
 
 # MARK: - Speed
 
 # Speed factor (RPM per least significant bit)
+
+
 def _speed_factor(model):
     if model == 'MX-12':
         return 0.916
@@ -94,6 +97,7 @@ def _speed_factor(model):
         return 0.114
 
     return 0.111
+
 
 def dxl_to_speed(value, model):
     cw, speed = divmod(value, 1024)
