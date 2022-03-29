@@ -18,9 +18,9 @@ from reachy_sdk.trajectory import goto, goto_async
 from reachy_sdk.trajectory.interpolation import InterpolationMode
 from scipy.spatial.transform import Rotation as R
 
-from reachy_kinematics import arm_kinematics
-import PyKDL as kdl
-from reachy_kinematics.kdl_parser_py import urdf
+# from reachy_kinematics import arm_kinematics
+# import PyKDL as kdl
+# from reachy_kinematics.kdl_parser_py import urdf
 
 
 class dxl_mt(object):
@@ -92,39 +92,39 @@ class Orbita2D(object):
             self.motor_offsets[id] = dxl.get_present_position([id])[0]
 
 
-def generate_solver(urdf_str: str):
-    """Create an FK/IK solvers for each arm (left/right)."""
-    success, urdf_tree = urdf.treeFromString(urdf_str)
-    if not success:
-        raise IOError('Could not parse the URDF!')
+# def generate_solver(urdf_str: str):
+#     """Create an FK/IK solvers for each arm (left/right)."""
+#     success, urdf_tree = urdf.treeFromString(urdf_str)
+#     if not success:
+#         raise IOError('Could not parse the URDF!')
 
-    chain = urdf_tree.getChain('torso', 'left_tip')
-    fk_solver = kdl.ChainFkSolverPos_recursive(chain)
+#     chain = urdf_tree.getChain('torso', 'left_tip')
+#     fk_solver = kdl.ChainFkSolverPos_recursive(chain)
 
-    ik_solver = kdl.ChainIkSolverPos_LMA(
-        chain,
-        eps=1e-5,
-        maxiter=500,
-        eps_joints=1e-15,
-        L=np.array([1, 1, 1, 0.01, 0.01, 0.01])
-    )
+#     ik_solver = kdl.ChainIkSolverPos_LMA(
+#         chain,
+#         eps=1e-5,
+#         maxiter=500,
+#         eps_joints=1e-15,
+#         L=np.array([1, 1, 1, 0.01, 0.01, 0.01])
+#     )
 
-    return chain, fk_solver, ik_solver
-
-
-def ArmV2_ik(ik_solver, target_pose, ratioA1=1, ratioB1=1, ratioA2=1, ratioB2=1):
-    tpose = np.eye(4)
-    tpose[:3, 3] = np.array(target_pose)
-    target_j = arm_kinematics.inverse_kinematics(ik_solver, q0=np.array([0, 0, 0, 0.01]), target_pose=tpose, nb_joints=4)
-    return ArmV2_kin(target_j[1], ratioA1, ratioB1, ratioA2, ratioB2)
+#     return chain, fk_solver, ik_solver
 
 
-def ArmV2_ik_rot(ik_solver, target_pose, ratioA1=1, ratioB1=1, ratioA2=1, ratioB2=1):
-    # tpose=np.eye(4)
-    # tpose[:3,3]=np.array(target_pose)
-    tpose = np.array(target_pose)
-    target_j = arm_kinematics.inverse_kinematics(ik_solver, q0=np.array([0, 0, 0, 0.01]), target_pose=tpose, nb_joints=4)
-    return ArmV2_kin(target_j[1], ratioA1, ratioB1, ratioA2, ratioB2)
+# def ArmV2_ik(ik_solver, target_pose, ratioA1=1, ratioB1=1, ratioA2=1, ratioB2=1):
+#     tpose = np.eye(4)
+#     tpose[:3, 3] = np.array(target_pose)
+#     target_j = arm_kinematics.inverse_kinematics(ik_solver, q0=np.array([0, 0, 0, 0.01]), target_pose=tpose, nb_joints=4)
+#     return ArmV2_kin(target_j[1], ratioA1, ratioB1, ratioA2, ratioB2)
+
+
+# def ArmV2_ik_rot(ik_solver, target_pose, ratioA1=1, ratioB1=1, ratioA2=1, ratioB2=1):
+#     # tpose=np.eye(4)
+#     # tpose[:3,3]=np.array(target_pose)
+#     tpose = np.array(target_pose)
+#     target_j = arm_kinematics.inverse_kinematics(ik_solver, q0=np.array([0, 0, 0, 0.01]), target_pose=tpose, nb_joints=4)
+#     return ArmV2_kin(target_j[1], ratioA1, ratioB1, ratioA2, ratioB2)
 
 
 def get_matrix(x, y, z, roll, pitch, yaw):
