@@ -23,7 +23,8 @@ position_range = {
     'MX': (4096, 360.0),
     'SR': (4096, 360.0),
     'EX': (4096, 251.0),
-    '*': (1024, 300.0)
+    '*': (1024, 300.0),
+    'XM': (4096, 360.0)
 }
 
 torque_max = {  # in N.m
@@ -63,6 +64,8 @@ def dxl_to_degree(value, model):
         determined_model = 'SR'
     elif model.startswith('EX'):
         determined_model = 'EX'
+    elif model.startswith('XM'):
+        determined_model = 'XM'
     max_pos, max_deg = position_range[determined_model]
 
     return round(((max_deg * float(value)) / (max_pos - 1)) - (max_deg / 2), 2)
@@ -76,6 +79,8 @@ def degree_to_dxl(value, model):
         determined_model = 'SR'
     elif model.startswith('EX'):
         determined_model = 'EX'
+    elif model.startswith('XM'):
+        determined_model = 'XM'
     max_pos, max_deg = position_range[determined_model]
 
     pos = int(round((max_pos - 1) * ((max_deg / 2 + float(value)) / max_deg), 0))
@@ -173,7 +178,8 @@ dynamixelModels = {
     350: 'XL-320',  # 94 + (1<<8)
     400: 'SR-RH4D',
     401: 'SR-RH4D',  # Virtual motor
-    16897: 'USB2AX'
+    16897: 'USB2AX',
+    1030: 'XM-430',
 }
 
 
@@ -364,7 +370,7 @@ def bool_to_dxl(value, model):
 
 
 def dxl_decode(data):
-    if len(data) not in (1, 2):
+    if len(data) not in (1, 2, 4):
         raise ValueError('try to decode incorrect data {}'.format(data))
 
     if len(data) == 1:
@@ -372,6 +378,9 @@ def dxl_decode(data):
 
     if len(data) == 2:
         return data[0] + (data[1] << 8)
+    
+    if len(data) == 4:
+        return int.from_bytes(data, byteorder='little', signed=False)
 
 
 def dxl_decode_all(data, nb_elem):
@@ -383,7 +392,7 @@ def dxl_decode_all(data, nb_elem):
 
 
 def dxl_code(value, length):
-    if length not in (1, 2):
+    if length not in (1, 2, 4):
         raise ValueError('try to code value with an incorrect length {}'.format(length))
 
     if length == 1:
@@ -391,6 +400,9 @@ def dxl_code(value, length):
 
     if length == 2:
         return (value % 256, value >> 8)
+    
+    if length == 4:
+        return value.to_bytes(4, byteorder='little', signed=False)
 
 
 def dxl_code_all(value, length, nb_elem):
