@@ -6,7 +6,7 @@ import logging
 import serial.tools.list_ports
 
 
-from .io import DxlIO, Dxl320IO, DxlXM430IO
+from .io import DxlIO, Dxl320IO, DxlXM430IO, DxlXL330IO
 from .error import BaseErrorHandler
 from .syncloop import BaseDxlController
 from .motor import DxlMXMotor, DxlAXRXMotor, DxlXL320Motor, DxlSRMotor
