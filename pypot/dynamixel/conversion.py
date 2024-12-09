@@ -29,14 +29,14 @@ position_range = {
 
 torque_max = {  # in N.m
     'MX-106': 8.4,
-    'MX-64': 6.,
+    'MX-64': 6.0,
     'MX-28': 2.5,
     'MX-12': 1.2,
     'AX-12': 1.2,
     'AX-18': 1.8,
     'RX-24': 2.6,
     'RX-28': 2.5,
-    'RX-64': 4.,
+    'RX-64': 4.0,
     'XL-320': 0.39,
     'SR-RH4D': 0.57,
     'EX-106': 10.9
@@ -52,7 +52,7 @@ velocity = {  # in degree/s
     'RX-24': 756.,
     'RX-28': 402.,
     'RX-64': 294.,
-    'SR-RH4D': 300.   
+    'SR-RH4D': 300.0,
 }
 
 
@@ -90,6 +90,7 @@ def degree_to_dxl(value, model):
 
 # MARK: - Speed
 
+
 # Speed factor (RPM per least significant bit)
 def _speed_factor(model):
     if model == 'MX-12':
@@ -99,6 +100,7 @@ def _speed_factor(model):
         return 0.114
 
     return 0.111
+
 
 def dxl_to_speed(value, model):
     cw, speed = divmod(value, 1024)
@@ -226,7 +228,8 @@ dynamixelBaudratesWithModel = {
         0: 9600.0,
         1: 57600.0,
         2: 115200.0,
-        3: 1000000.0
+        3: 1000000.0,
+        4: 2000000.0
     }
 }
 
@@ -370,7 +373,7 @@ def bool_to_dxl(value, model):
 
 
 def dxl_decode(data):
-    if len(data) not in (1, 2, 4):
+    if len(data) not in (1, 2, 4, 8):
         raise ValueError('try to decode incorrect data {}'.format(data))
 
     if len(data) == 1:
@@ -381,6 +384,12 @@ def dxl_decode(data):
     
     if len(data) == 4:
         return int.from_bytes(data, byteorder='little', signed=False)
+    
+    if len(data) == 8:
+        return (
+            data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24),
+            data[4] + (data[5] << 8) + (data[6] << 16) + (data[7] << 24),
+        )
 
 
 def dxl_decode_all(data, nb_elem):
