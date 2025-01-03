@@ -66,6 +66,8 @@ def dxl_to_degree(value, model):
         determined_model = 'EX'
     elif model.startswith('XM'):
         determined_model = 'XM'
+    elif model.startswith('FEETECH'):
+        determined_model = 'MX'
     max_pos, max_deg = position_range[determined_model]
 
     return round(((max_deg * float(value)) / (max_pos - 1)) - (max_deg / 2), 2)
@@ -81,6 +83,8 @@ def degree_to_dxl(value, model):
         determined_model = 'EX'
     elif model.startswith('XM'):
         determined_model = 'XM'
+    elif model.startswith('FEETECH'):
+        determined_model = 'MX'
     max_pos, max_deg = position_range[determined_model]
 
     pos = int(round((max_pos - 1) * ((max_deg / 2 + float(value)) / max_deg), 0))
@@ -182,6 +186,8 @@ dynamixelModels = {
     401: 'SR-RH4D',  # Virtual motor
     16897: 'USB2AX',
     1030: 'XM-430',
+
+    777: 'FEETECH_STS3215',
 }
 
 
