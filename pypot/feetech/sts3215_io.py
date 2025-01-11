@@ -205,6 +205,8 @@ controls = {
         "address": 31,
         "length": 2,
         "access": _DxlAccess.readwrite,
+        "dxl_to_si": dxl_mx_conv.dxl_to_degree,
+        "si_to_dxl": dxl_mx_conv.degree_to_dxl,
     },
     "mode": {
         "address": 33,
@@ -286,6 +288,11 @@ controls = {
         "access": _DxlAccess.readonly,
         "dxl_to_si": dxl_mx_conv.dxl_to_degree,
         "si_to_dxl": dxl_mx_conv.degree_to_dxl,
+    },
+    "present position raw": {
+        "address": 56,
+        "length": 2,
+        "access": _DxlAccess.readonly,
     },
     "present speed": {
         "address": 58,
