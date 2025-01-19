@@ -132,7 +132,8 @@ def feetech_to_speed(value, model):
         value = -(value - 2**15)
 
     value = (360 * float(value)) / (4096 - 1)
-    return value
+    # There seem to be a ~10, maybe they use the same speed factor ...
+    return value * 0.111
 
 
 def speed_to_feetech(value, model):
@@ -141,7 +142,7 @@ def speed_to_feetech(value, model):
     if value < 0:
         value = 2**15 - value
 
-    return value
+    return value * 1/0.111
 
 
 def dxl_to_torque(value, model):
