@@ -298,8 +298,8 @@ controls = {
         "address": 58,
         "length": 2,
         "access": _DxlAccess.readonly,
-        "dxl_to_si": dxl_mx_conv.dxl_to_speed,
-        "si_to_dxl": dxl_mx_conv.speed_to_dxl,
+        "dxl_to_si": dxl_mx_conv.feetech_to_speed,
+        "si_to_dxl": dxl_mx_conv.speed_to_feetech,
     },
     "present load": {
         "address": 60,
