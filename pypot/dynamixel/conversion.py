@@ -133,7 +133,7 @@ def feetech_to_speed(value, model):
 
     value = (360 * float(value)) / (4096 - 1)
     # There seem to be a ~10, maybe they use the same speed factor ...
-    return value * 0.111
+    return value# * 0.111
 
 
 def speed_to_feetech(value, model):
