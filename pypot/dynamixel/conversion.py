@@ -69,7 +69,6 @@ def dxl_to_degree(value, model):
     elif model.startswith("FEETECH"):
         determined_model = "MX"
     max_pos, max_deg = position_range[determined_model]
-
     return round(((max_deg * float(value)) / (max_pos - 1)) - (max_deg / 2), 2)
 
 
@@ -209,6 +208,7 @@ dynamixelModels = {
     16897: "USB2AX",
     1030: "XM-430",
     777: "FEETECH_STS3215",
+    3338: "FEETECH_HLS3625",
 }
 
 
