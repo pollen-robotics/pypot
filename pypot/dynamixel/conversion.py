@@ -142,7 +142,7 @@ def speed_to_feetech(value, model):
     if value < 0:
         value = 2**15 - value
 
-    return value * 1/0.111
+    return value# * 1/0.111
 
 
 def dxl_to_torque(value, model):
