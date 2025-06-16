@@ -331,10 +331,30 @@ controls = {
         "length": 2,
         "access": _DxlAccess.readonly,
     },
+    "vfk": {
+        "address": 77,
+        "length": 1,
+        "access": _DxlAccess.readwrite,
+    },
+    "vmin": {
+        "address": 80,
+        "length": 1,
+        "access": _DxlAccess.readwrite,
+    },
+    "vk": {
+        "address": 83,
+        "length": 1,
+        "access": _DxlAccess.readwrite,
+    },
+    "maximum velocity": {
+        "address": 84,
+        "length": 1,
+        "access": _DxlAccess.readwrite,
+    },
     # Not in the Memory Table
     "maximum acceleration": {
         "address": 85,
-        "length": 2,
+        "length": 1,
         "access": _DxlAccess.readwrite,
     },
 }
