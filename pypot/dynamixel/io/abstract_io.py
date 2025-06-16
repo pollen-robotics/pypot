@@ -225,6 +225,7 @@ class AbstractDxlIO(object):
     def get_model(self, ids):
         """ Gets the model for the specified motors. """
         to_get_ids = [i for i in ids if i not in self._known_models]
+
         models = [dxl_to_model(m) for m in self._get_model(to_get_ids, convert=False)]
         self._known_models.update(zip(to_get_ids, models))
 
@@ -398,7 +399,7 @@ class AbstractDxlIO(object):
                     values = list(sp.parameters)
                     for i in range(len(ids) - 1):
                         try:
-                            sp = self.__real_read(rp, _force_lock=True)
+                            sp = self._real_read(rp, _force_lock=True)
                         except (DxlTimeoutError, DxlCommunicationError):
                             return ()
                         values.extend(sp.parameters)
@@ -496,7 +497,7 @@ class AbstractDxlIO(object):
             if not wait_for_status_packet:
                 return
 
-            status_packet = self.__real_read(instruction_packet, _force_lock=True)
+            status_packet = self._real_read(instruction_packet, _force_lock=True)
 
             logger.debug('Receiving %s', status_packet,
                          extra={'port': self.port,
@@ -505,7 +506,7 @@ class AbstractDxlIO(object):
 
             return status_packet
 
-    def __real_read(self, instruction_packet, _force_lock):
+    def _real_read(self, instruction_packet, _force_lock):
         with self.__force_lock(_force_lock) or self._serial_lock:
             data = self._serial.read(self._protocol.DxlPacketHeader.length)
             if not data:
