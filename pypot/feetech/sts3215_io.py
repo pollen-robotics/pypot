@@ -10,6 +10,47 @@ class FeetechSTS3215IO(AbstractDxlIO):
     _protocol = v1
     _protocol.DxlInstruction.SYNC_READ = 130
 
+    def reset(self, ids, **kwargs):
+        """
+        Send the Protocol 1.0 RESET (0x06) instruction to the given servo IDs.
+        Feetech STS series accepts RESET with no parameters (soft reset / table re-init).
+        Returns a tuple of IDs that acknowledged the reset (status packets received).
+        """
+        if not ids:
+            return ()
+
+        error_handler = kwargs.get('error_handler', self._error_handler)
+        ack_ids = []
+
+        with self._serial_lock:
+            for motor_id in ids:
+                # Build the reset packet using whatever the protocol exposes.
+                try:
+                    # Preferred: dedicated reset packet class if available
+                    rp = self._protocol.DxlResetPacket(motor_id)  # may not exist in all stacks
+                except AttributeError:
+                    # Fallback: generic instruction packet
+                    # RESET has no parameters in Protocol 1.0
+                    try:
+                        rp = self._protocol.DxlInstructionPacket(
+                            motor_id,
+                            self._protocol.DxlInstruction.RESET,
+                            b""
+                        )
+                    except AttributeError:
+                        # Last-resort: a very generic packet type some stacks expose
+                        rp = self._protocol.DxlPacket(
+                            motor_id,
+                            self._protocol.DxlInstruction.RESET,
+                            b""
+                        )
+
+                sp = self._send_packet(rp, error_handler=error_handler, _force_lock=True)
+                if sp:
+                    ack_ids.append(motor_id)
+
+        return tuple(ack_ids)
+
     def _get_control_value(self, control, ids, **kwargs):
         if not ids:
             return ()
